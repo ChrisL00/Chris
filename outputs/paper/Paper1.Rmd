@@ -1,0 +1,95 @@
+---
+title: "Evaluation of Buildings for renting in Toronto"
+author: "Chenyu Lin"
+date: "2022/2/3"
+output: pdf_document
+abstract: "This report uses the data from Open Data Toronto collected data of RentSafeTO program. It gives us evaluations of buildings in Toronto. From this report, we can find Toronto-St. Paul's is the best ward to rent a safe house for people want to live in Toronto."
+bibliography: ref_list.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE, echo=FALSE}
+library(kableExtra)
+library(tidyverse)
+library(opendatatoronto)
+library(dplyr)
+ 
+# get package
+package <- show_package("4ef82789-e038-44ef-a478-a8f3590c3eb1")
+package
+ 
+# get all resources for this package
+resources <- list_package_resources("4ef82789-e038-44ef-a478-a8f3590c3eb1")
+ 
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+ 
+# load the first datastore resource as a sample
+data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+data
+```
+
+## Introduction
+
+Nowadays, with the increasing number of people come to Toronto, renting houses becomes the first important thing for people who want to live here. Toronto government is also care about it so that RentSafeTO, Apartment Building Standards is a bylaw enforcement program, is established. This program is going to evaluate buildings that are using to rent, and it is beginning from 2017. For those people who want to live in Toronto, this report may help you to find buildings with high security and in good situations. In addition, Toronto is divided into 25 wards, and I make a graph that will tell you where can find a good ward that containing the most good buildings. 
+
+This report will be processed and analyzed in R [@E] by using the tidyverse [@A] , dplyr [@B] , and kableExtra [@C] packages. The dataset is from opendatatoronto [@D] .
+
+
+## Data
+```{r, echo=FALSE}
+data_new <- data %>%
+  filter(ELEVATORS >= 1, ELEVATORS <=5) %>%
+  filter(BALCONY_GUARDS >=1, BALCONY_GUARDS <=5)
+```
+
+This dataset comprises the results of building evaluations for buildings that have been registered with RentSafeTO. RentSafeTO: Apartment Building Standards is a bylaw enforcement program that ensures apartment building owners and operators comply with building maintenance standards. The program applies to apartment buildings with three or more storeys and 10 or more units [@AA] . The RentSafeTO programme requires apartment building owners and operators to register and comply with the program's standards. Buildings must be inspected every three years at the absolute least. Bylaw Enforcement Officers evaluate common spaces, mechanical and security systems, parking, and external grounds during assessments. Each item is examined and given a score ranging from one to five, with one being the lowest and five the highest. The dataset is from the City of Toronto Open Data Portal using the R package opendatatoronto. The data was last refreshed on February 5th, 2022.
+
+
+The dataset contains information from the RentSafeTO project which is started from 2017. During evaluations, staff inspect and score the condition of common areas, mechanical and security systems, parking and exterior grounds. Due to the covid 19, there may appear some new issues other than old issues in the project, a fact which do not include in the program. A good thing is that the data is daily refreshed so we can get the newest information from it. However, although there are 3400 buildings registered with RentSafeTO, there are still many buildings that are not in this program. Thus, this dataset may not exactly reflect the reality. In addition, if an item is not applicable to the building at the time of evaluation, the score will show as blank in the dataset.
+
+
+This dataset contains 9758 observations and 40 variables. The higher score means the building is better. We are also looking at the security score which is our focus in this research. I take out those observations without the score of elevator and balcony guards. After cleaning the dataset, we get 5091 observations now.
+
+
+Figure 1 displays the different number of buildings with different security scores(from 1 to 5), and the balcony guards score in each security score level.
+
+```{r 1, fig.cap ="The number of buildings with different security score", echo=FALSE}
+data_new %>% ggplot(aes(x = SECURITY, fill=BALCONY_GUARDS)) + geom_bar() + theme_classic()+
+  labs(x = "Security Score", y = "Number of Buildings", title = "Security score and Balcony guards score")
+```
+
+From Figure 1, we can find that almost 80%(4000) of the buildings in RentSafeTO program get 4 or 5 in the evaluation of security, a fact which means those buildings are very safe. BUildings get 4 in the security evaluation is almost the same with buildings get 5 in the security evaluation; both of them are around 2000. Buildings get 3 in the security evaluation is around 1000, and get 2 or lower is less than 100. In addition, most of the buildings with high security score(bigger or equal to 4) also get high balcony guards score, which means the condition of the balcony guards on the building is good. The highest security score buildings have the most 4 and 5 balcony guards score(around 1500), then is the buildings with 4 security score(around 1200), then is the buildings with 3 security score(around 400), and security score below 3 buildings only have a little(around 20). Thus, we can say higher balcony guards score may help buildings to get higher security score.
+
+
+Figure 2 displays the number of buildings in 25 different wards with different security scores. 
+
+```{r 2, fig.cap ="The number of buildings with different security score in 25 wards", echo=FALSE}
+data_new %>% ggplot(aes(x = WARDNAME, fill=SECURITY)) + geom_bar()+ coord_flip() + theme_classic()+
+  labs(x = "Number of buildings", y = "Wardname", title = "Buildings' Security score in different Wards")
+```
+
+From Figure 2, we can see that Toronto-St. Paul's has the most buildings(around 200) which get 5 security score, Don valley East has the second most buildings(around 180) which get 5 security score. These two wards are also have the most buildings that had registered in RentSafeTO program. We can also find the two lowest number of buildings with high security score are Scarborough North and Scarborough-Rouge Park, both are around 10 to 20. Therefore, we can say that buildings in Toronto-St. Paul's and Don valley East seems more safer than buildings in Scarborough North and Scarborough-Rouge Park. You may want to choose to rent houses in Toronto-St. Paul's and Don valley East rather than in Scarborough North and Scarborough-Rouge Park.
+
+
+\newpage
+
+
+Table 1 shows the mean score of elevators and the mean score of balcony guards of the buildings with different security score.
+```{r a, echo=FALSE}
+data_new$ELEVATORS <- as.numeric(data_new$ELEVATORS)
+data_new$BALCONY_GUARDS <- as.numeric((data_new$BALCONY_GUARDS))
+summary_table <- data_new %>%
+  group_by(SECURITY) %>% summarise(Elevators_Score = mean(ELEVATORS),
+                                  Balcony_Guards_Score = mean(BALCONY_GUARDS))
+knitr::kable(summary_table, caption = "The mean of Elevator's score and balcony guards' score in different security buildings")
+```
+From Table 1, we can see that the mean score of elevator and balcony guards of buildings with 1 security score is 2.16 and 2.33, the mean score of elevator and balcony guards of buildings with 2 security score is 2.81 and 3.11, the mean score of elevator and balcony guards of buildings with 3 security score is 3.26 and 3.33, the mean score of elevator and balcony guards of buildings with 4 security score is 3.67 and 3.67, the mean score of elevator and balcony guards of buildings with 5 security score is 4.16 and 4.04. Thus, we can find that buildings with higher elevator score and higher balcony guards score can get higher security score.
+
+
+\newpage
+
+# Reference
