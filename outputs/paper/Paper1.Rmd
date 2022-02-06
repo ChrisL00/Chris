@@ -1,5 +1,5 @@
 ---
-title: "Evaluation of Buildings for renting in Toronto"
+title: "Evaluation of Buildings for renting in Toronto^[Code and data are available at: https://github.com/ChrisL00/Chris]"
 author: "Chenyu Lin"
 date: "2022/2/3"
 output: pdf_document
@@ -34,7 +34,7 @@ data
 
 ## Introduction
 
-Nowadays, with the increasing number of people come to Toronto, renting houses becomes the first important thing for people who want to live here. Toronto government is also care about it so that RentSafeTO, Apartment Building Standards is a bylaw enforcement program, is established. This program is going to evaluate buildings that are using to rent, and it is beginning from 2017. For those people who want to live in Toronto, this report may help you to find buildings with high security and in good situations. In addition, Toronto is divided into 25 wards, and I make a graph that will tell you where can find a good ward that containing the most good buildings. 
+Nowadays, with the increasing number of people come to Toronto, renting houses becomes the first important thing for people who want to live here. Toronto government is also care about it so that RentSafeTO, Apartment Building Standards is a bylaw enforcement program, is established. This program is going to evaluate buildings that are using to rent, and it is beginning from 2017. For those people who want to live in Toronto, this report may help you to find buildings with high security and in good situations. In addition, Toronto is divided into 25 wards, and I make a graph that will tell you where can find a good ward that containing the most good buildings.
 
 This report will be processed and analyzed in R [@E] by using the tidyverse [@A] , dplyr [@B] , and kableExtra [@C] packages. The dataset is from opendatatoronto [@D] .
 
@@ -64,6 +64,7 @@ data_new %>% ggplot(aes(x = SECURITY, fill=BALCONY_GUARDS)) + geom_bar() + theme
 
 From Figure 1, we can find that almost 80%(4000) of the buildings in RentSafeTO program get 4 or 5 in the evaluation of security, a fact which means those buildings are very safe. BUildings get 4 in the security evaluation is almost the same with buildings get 5 in the security evaluation; both of them are around 2000. Buildings get 3 in the security evaluation is around 1000, and get 2 or lower is less than 100. In addition, most of the buildings with high security score(bigger or equal to 4) also get high balcony guards score, which means the condition of the balcony guards on the building is good. The highest security score buildings have the most 4 and 5 balcony guards score(around 1500), then is the buildings with 4 security score(around 1200), then is the buildings with 3 security score(around 400), and security score below 3 buildings only have a little(around 20). Thus, we can say higher balcony guards score may help buildings to get higher security score.
 
+\newpage
 
 Figure 2 displays the number of buildings in 25 different wards with different security scores. 
 
@@ -74,9 +75,7 @@ data_new %>% ggplot(aes(x = WARDNAME, fill=SECURITY)) + geom_bar()+ coord_flip()
 
 From Figure 2, we can see that Toronto-St. Paul's has the most buildings(around 200) which get 5 security score, Don valley East has the second most buildings(around 180) which get 5 security score. These two wards are also have the most buildings that had registered in RentSafeTO program. We can also find the two lowest number of buildings with high security score are Scarborough North and Scarborough-Rouge Park, both are around 10 to 20. Therefore, we can say that buildings in Toronto-St. Paul's and Don valley East seems more safer than buildings in Scarborough North and Scarborough-Rouge Park. You may want to choose to rent houses in Toronto-St. Paul's and Don valley East rather than in Scarborough North and Scarborough-Rouge Park.
 
-
 \newpage
-
 
 Table 1 shows the mean score of elevators and the mean score of balcony guards of the buildings with different security score.
 ```{r a, echo=FALSE}
