@@ -52,7 +52,7 @@ This dataset comprises the results of building evaluations for buildings that ha
 The dataset contains information from the RentSafeTO project which is started from 2017. During evaluations, staff inspect and score the condition of common areas, mechanical and security systems, parking and exterior grounds. Due to the covid 19, there may appear some new issues other than old issues in the project, a fact which do not include in the program. A good thing is that the data is daily refreshed so we can get the newest information from it. However, although there are 3400 buildings registered with RentSafeTO, there are still many buildings that are not in this program. Thus, this dataset may not exactly reflect the reality. In addition, if an item is not applicable to the building at the time of evaluation, the score will show as blank in the dataset.
 
 
-This dataset contains 9758 observations and 40 variables. The higher score means the building is better. We are also looking at the security score which is our focus in this research. I take out those observations without the score of elevator and balcony guards. After cleaning the dataset, we get 5091 observations now.
+This dataset contains 9758 observations and 40 variables. The higher score means the building is better. We are also looking at the security score which is our focus in this research. I take out those observations without the score of elevator and balcony guards. After cleaning the dataset, I remove the missing value by using filter function in tidyverse [@A], then we get 5091 observations now.
 
 
 Figure 1 displays the different number of buildings with different security scores(from 1 to 5), and the balcony guards score in each security score level.
