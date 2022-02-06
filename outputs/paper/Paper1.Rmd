@@ -11,7 +11,7 @@ bibliography: ref_list.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include=FALSE, echo=FALSE}
+```{r, message=FALSE, include=FALSE, echo=FALSE}
 library(kableExtra)
 library(tidyverse)
 library(opendatatoronto)
@@ -40,7 +40,7 @@ This report will be processed and analyzed in R [@E] by using the tidyverse [@A]
 
 
 ## Data
-```{r, echo=FALSE}
+```{r, message=FALSE, echo=FALSE}
 data_new <- data %>%
   filter(ELEVATORS >= 1, ELEVATORS <=5) %>%
   filter(BALCONY_GUARDS >=1, BALCONY_GUARDS <=5)
@@ -75,7 +75,6 @@ data_new %>% ggplot(aes(x = WARDNAME, fill=SECURITY)) + geom_bar()+ coord_flip()
 
 From Figure 2, we can see that Toronto-St. Paul's has the most buildings(around 200) which get 5 security score, Don valley East has the second most buildings(around 180) which get 5 security score. These two wards are also have the most buildings that had registered in RentSafeTO program. We can also find the two lowest number of buildings with high security score are Scarborough North and Scarborough-Rouge Park, both are around 10 to 20. Therefore, we can say that buildings in Toronto-St. Paul's and Don valley East seems more safer than buildings in Scarborough North and Scarborough-Rouge Park. You may want to choose to rent houses in Toronto-St. Paul's and Don valley East rather than in Scarborough North and Scarborough-Rouge Park.
 
-\newpage
 
 Table 1 shows the mean score of elevators and the mean score of balcony guards of the buildings with different security score.
 ```{r a, echo=FALSE}
@@ -84,7 +83,7 @@ data_new$BALCONY_GUARDS <- as.numeric((data_new$BALCONY_GUARDS))
 summary_table <- data_new %>%
   group_by(SECURITY) %>% summarise(Elevators_Score = mean(ELEVATORS),
                                   Balcony_Guards_Score = mean(BALCONY_GUARDS))
-knitr::kable(summary_table, caption = "The mean of Elevator's score and balcony guards' score in different security buildings")
+knitr::kable(summary_table, caption = "The mean of Elevator's score and balcony guards' score in different security buildings") %>% kable_styling(latex_option = "HOLD_position")
 ```
 From Table 1, we can see that the mean score of elevator and balcony guards of buildings with 1 security score is 2.16 and 2.33, the mean score of elevator and balcony guards of buildings with 2 security score is 2.81 and 3.11, the mean score of elevator and balcony guards of buildings with 3 security score is 3.26 and 3.33, the mean score of elevator and balcony guards of buildings with 4 security score is 3.67 and 3.67, the mean score of elevator and balcony guards of buildings with 5 security score is 4.16 and 4.04. Thus, we can find that buildings with higher elevator score and higher balcony guards score can get higher security score.
 
